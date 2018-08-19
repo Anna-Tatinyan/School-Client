@@ -1,9 +1,9 @@
-
 import actionConstant from "../constants/actionConstant";
-import history from "../history";
+
 const initialState = {
 
-   teachersArray: []
+  teachersArray: [],
+  errorMessage: ""
 };
 
 export function getTeachersArray(state = initialState, action) {
@@ -11,18 +11,27 @@ export function getTeachersArray(state = initialState, action) {
   switch (action.type) {
 
 
-      case actionConstant.GET_TEACHER: {
+    case actionConstant.GET_TEACHER:
 
-            return Object.assign({}, state, {
-              ...state,
+      return Object.assign({}, state, {
+        ...state,
 
-              teachersArray: action.teachersArray
-            });
-          }
+        teachersArray: action.teachersArray
+      });
+      case actionConstant.DELETE_ERROR:
 
+        return Object.assign({}, state, {
+          ...state,
 
-        break;
-        default:
-          return state;
-    }
+          errorMessage: action.message
+        });
+        case actionConstant.RESET_MESSAGE:
+          return {
+            ...state,
+            errorMessage: null
+          };
+
+    default:
+      return state;
   }
+}

@@ -2,7 +2,6 @@ import actionConstant from '../../constants/actionConstant';
 import {
   setNewId
 } from "../commonActions"
-import fetch from "isomorphic-fetch";
 import {
   generalFetch
 } from "../fetchAction"
@@ -23,7 +22,7 @@ export function getCourses() {
       console.log('request failed', error);
     });
 }
-export function addCourses(input) {
+export function addCourses(input, shouldEdit) {
 
   const addBody = {
     "name": input.name,
@@ -32,12 +31,26 @@ export function addCourses(input) {
     "startDate": input.startDate,
     "endDate": input.endDate
   }
-  console.log(input);
   return dispatch =>
 
     dispatch(generalFetch('admin/courses', 'post', addBody))
     .then((result) => {
-      dispatch(setNewId(result.id));
+      if (shouldEdit) {
+        dispatch(setNewId(result.id));
+      }
+      const timeBody = {
+        "courseId": result.id,
+        "startTime": input.time[0].startTime,
+        "endTime": input.time[0].endTime,
+        "weekDay": input.time[0].weekDay,
+        "classId": input.classId
+
+
+      }
+      dispatch(generalFetch('admin/time', 'post', timeBody))
+        .then(time => {
+          dispatch(messageNotification(time.message))
+        })
       return dispatch(getCourses())
     })
 
@@ -67,12 +80,18 @@ export function deleteCourses(id) {
 }
 
 
-
 export function getAvailableTeachersArray(availableTeachersArray) {
 
   return {
     availableTeachersArray,
     type: actionConstant.GET_AVAILABLE_TEACHERS
+  };
+}
+export function messageNotification(message) {
+
+  return {
+    message,
+    type: actionConstant.MESSAGE_NOTIFY
   };
 }
 
@@ -103,7 +122,6 @@ export function getCoursesArray(coursesArray) {
 
 
 export function updateCourses(input) {
-  console.log(input)
   const updateBody = {
     "name": input.name,
     "teacherId": input.teacherId,
@@ -112,12 +130,25 @@ export function updateCourses(input) {
     "endDate": input.endDate
 
   }
-  return dispatch => {
+  const timeBody = {
+    "courseId": input.id,
+    "startTime": input.time[0].startTime,
+    "endTime": input.time[0].endTime,
+    "weekDay": input.time[0].weekDay,
+    "classId": input.classId
 
+  }
+  return dispatch => {
+    //
     dispatch(generalFetch(`admin/courses/${input.id}`, "put", updateBody))
       .then(result => {
+        dispatch(generalFetch(`admin/time/edit`, "put", timeBody))
+          .then(time => {
+            dispatch(messageNotification(time.message))
+          })
         return dispatch(getCourses())
       })
+
       .catch(error => {
         console.log('request failed', error);
       });
