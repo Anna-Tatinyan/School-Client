@@ -7,7 +7,7 @@ const headersDefault = {
 export function generalFetch(url, method, body, headers = headersDefault) {
   return dispatch =>
 
-    fetch(`http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/${url}`, {
+    fetch(`https://school--website.herokuapp.com/${url}`, {
       method: method,
       headers: headers,
       body: JSON.stringify(body)
