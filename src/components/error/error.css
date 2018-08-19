@@ -12,12 +12,19 @@
 
 .errorRight {
   position: absolute;
-   top: 8px;
+   top: 90px;
    right: 16px;
+}
+.go-back {
+   top: 90px;
+   right: 16px;
+   background-color: black;
+   color: white;
+   font-size: 25px
 }
 .errorBottom {
   position: absolute;
-  top:50px;
+  top:60px;
   right: 16px
 }
 .error-div {

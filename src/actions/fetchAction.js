@@ -6,8 +6,7 @@ const headersDefault = {
 
 export function generalFetch(url, method, body, headers = headersDefault) {
   return dispatch =>
-
-    fetch(`https://school--website.herokuapp.com/${url}`, {
+fetch(`https://school-website-flux.herokuapp.com/${url}`, {
       method: method,
       headers: headers,
       body: JSON.stringify(body)
